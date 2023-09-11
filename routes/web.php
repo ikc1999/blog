@@ -19,4 +19,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\BlogController::class, 'index'])->name('home');
+
+Route::get('/blogs/create',[App\Http\Controllers\BlogController::class,'create'])->name('blog.create');
+Route::get('/blogs/post',[App\Http\Controllers\BlogController::class,'store'])->name('blogs.store');

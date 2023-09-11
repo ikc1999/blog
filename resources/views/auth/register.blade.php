@@ -8,10 +8,32 @@
                 <div class="card-header">{{ __('Register') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
+                    <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                         @csrf
 
-                       
+                        <div class="form-group">
+                            <label for="firstname">First Name</label>
+                            <input id="firstname" type="text" class="form-control" name="firstname" value="{{ old('firstname') }}" required autofocus>
+                            @error('firstname')
+                                <span class="text-red-600">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastname">Last Name</label>
+                            <input id="lastname" type="text" class="form-control" name="lastname" value="{{ old('lastname') }}" required>
+                            @error('lastname')
+                                <span class="text-red-600">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dob">Date of Birth</label>
+                            <input id="dob" type="date" class="form-control" name="dob" value="{{ old('dob') }}" required>
+                            @error('dob')
+                                <span class="text-red-600">{{ $message }}</span>
+                            @enderror
+                        </div>
 
                         <div class="row mb-3">
                             <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
@@ -49,29 +71,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="firstname">First Name</label>
-                            <input id="firstname" type="text" class="form-control" name="firstname" value="{{ old('firstname') }}" required autofocus>
-                            @error('firstname')
-                                <span class="text-red-600">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label for="lastname">Last Name</label>
-                            <input id="lastname" type="text" class="form-control" name="lastname" value="{{ old('lastname') }}" required>
-                            @error('lastname')
-                                <span class="text-red-600">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label for="dob">Date of Birth</label>
-                            <input id="dob" type="date" class="form-control" name="dob" value="{{ old('dob') }}" required>
-                            @error('dob')
-                                <span class="text-red-600">{{ $message }}</span>
-                            @enderror
-                        </div>
+                       
 
                         <div class="form-group">
                             <label for="image">Profile Image</label>

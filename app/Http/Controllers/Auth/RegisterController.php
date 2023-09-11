@@ -50,7 +50,11 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
+            'firstname' => ['required', 'string', 'max:255'],
+            'lastname' => ['required', 'string', 'max:255'],
+            'dob' => ['required', 'date'],
+            'image' => ['required', 'image', 'max:2048'], // Assuming you want to validate image uploads with a maximum size of 2MB (2048 KB)
+            'role' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -64,10 +68,34 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        // Get the uploaded image file
+        $image = $data['image'];
+    
+        // Generate a unique filename for the image
+        $imageFileName = time() . '.' . $image->getClientOriginalExtension();
+    
+        // Store the image in the storage/app/public directory
+        $imagePath = $image->storeAs('public/profile_images', $imageFileName);
+        try {
+            // Create the user and store the image path in the database
+            return User::create([
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'firstname' => $data['firstname'],
+                'lastname' => $data['lastname'],
+                'dob' => $data['dob'],
+                'image' => $imagePath,
+                'role' => $data['role'],
+            ]);
+         } catch (\Exception $e) {
+            // Log the error or handle it as needed
+            // For debugging, you can use dd($e->getMessage()) to display the error message.
+            // Log::error($e->getMessage());
+            // dd($e->getMessage());
+    
+            // Redirect back with an error message (example)
+            return redirect()->back()->with('error', 'User registration failed.');
+        }
     }
+    
 }
