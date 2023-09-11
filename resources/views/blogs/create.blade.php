@@ -24,7 +24,7 @@
 
         <div class="form-group">
             <label for="end_date">End Date</label>
-            <input type="date" name="end_date" id="end_date" class="form-control" required>
+            <input type="date" name="end_date" id="end_date" class="form-control" >
         </div>
 
         <div class="form-group">

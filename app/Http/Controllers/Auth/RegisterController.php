@@ -78,7 +78,7 @@ class RegisterController extends Controller
         $imagePath = $image->storeAs('public/profile_images', $imageFileName);
         try {
             // Create the user and store the image path in the database
-            return User::create([
+            $user  = User::create([
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
                 'firstname' => $data['firstname'],
@@ -87,13 +87,11 @@ class RegisterController extends Controller
                 'image' => $imagePath,
                 'role' => $data['role'],
             ]);
+            session(['user_id' => $user->id]);
+            return $user;
+
          } catch (\Exception $e) {
-            // Log the error or handle it as needed
-            // For debugging, you can use dd($e->getMessage()) to display the error message.
-            // Log::error($e->getMessage());
-            // dd($e->getMessage());
-    
-            // Redirect back with an error message (example)
+           
             return redirect()->back()->with('error', 'User registration failed.');
         }
     }

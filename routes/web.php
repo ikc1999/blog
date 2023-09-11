@@ -13,13 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/',  [App\Http\Controllers\IndexController::class, 'index']);
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\BlogController::class, 'index'])->name('home');
+Route::middleware(['auth'])->group(function () {
 
 Route::get('/blogs/create',[App\Http\Controllers\BlogController::class,'create'])->name('blog.create');
-Route::get('/blogs/post',[App\Http\Controllers\BlogController::class,'store'])->name('blogs.store');
+Route::post('/blogs/post',[App\Http\Controllers\BlogController::class,'store'])->name('blogs.store');
+Route::get('/blogs/{id}/edit',  [App\Http\Controllers\BlogController::class,'edit'])->name('blogs.edit');
+Route::put('/blogs/{id}',  [App\Http\Controllers\BlogController::class,'update'])->name('blogs.update');
+Route::delete('/blogs/{blog}', [App\Http\Controllers\BlogController::class,'destroy'])->name('blogs.destroy');
+Route::get('/blogs/{id}/activate', [App\Http\Controllers\BlogController::class, 'activate'])->name('blogs.activate');
+Route::get('/blogs/{id}/deactivate', [App\Http\Controllers\BlogController::class, 'deactivate'])->name('blogs.deactivate');
+
+});

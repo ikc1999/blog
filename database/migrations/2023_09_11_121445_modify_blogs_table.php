@@ -14,10 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('blogs', function (Blueprint $table) {
-            //
-            Schema::table('blogs', function (Blueprint $table) {
-                $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            });
+            $table->date('end_date')->nullable()->change();
         });
     }
 
@@ -29,11 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('blogs', function (Blueprint $table) {
-            //
-            Schema::table('blogs', function (Blueprint $table) {
-                $table->dropForeign(['user_id']);
-                $table->dropColumn('user_id');
-            });
+            $table->date('end_date')->nullable(false)->change();
         });
     }
 };

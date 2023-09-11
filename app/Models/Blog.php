@@ -15,9 +15,13 @@ class Blog extends Model
         'end_date',
         'is_active',
         'image',
+        'user_id'
     ];
 
     protected $casts = [
-        'is_active' => 'boolean', // Cast 'is_active' to boolean
+        'is_active' => 'integer', // Cast 'is_active' to boolean
+    ];
+    protected $attributes = [
+        'is_active' => 1, // Set a default value for 'is_active'
     ];
 }
