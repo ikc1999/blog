@@ -25,23 +25,22 @@ class BlogController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    { 
+    {
         if (auth()->id()) {
-
             // Get the current user's ID from the session
-        $userId = auth()->id();
-         
-        // Check if the user's role is 'user' from the 'users' table
-        $user = User::find($userId);
+            $userId = auth()->id();
+            
+            // Check if the user's role is 'user' from the 'users' table
+            $user = User::find($userId);
 
-        if ($user && $user->role === 'user') {
-            // Retrieve and display only the blogs associated with the current user
-            $blogs = Blog::where('user_id', $userId)->get();
+            if ($user && $user->role === 'user') {
+                // Retrieve and display only the blogs associated with the current user
+                $blogs = Blog::where('user_id', $userId)->paginate(10);
 
-            return view('home', compact('blogs'));
+                return view('home', compact('blogs'));
+            }
         }
-    }
-        $blogs = Blog::all();
+        $blogs = Blog::paginate(10);
 
         return view('home', compact('blogs'));
     }
@@ -90,22 +89,40 @@ class BlogController extends Controller
 
     public function destroy(Request $request, Blog $blog)
     {
-        // Unlink the image from storage
-        if (Storage::disk('public')->exists('uploads/' . $blog->image)) {
-            Storage::disk('public')->delete('uploads/' . $blog->image);
+        if (auth()->id()) {
+            $userId = auth()->id();
+            $user = User::find($userId);
+
+            if($userId === $blog->user_id || $user->role === 'admin'){
+                // Unlink the image from storage
+                if (Storage::disk('public')->exists('uploads/' . $blog->image)) {
+                    Storage::disk('public')->delete('uploads/' . $blog->image);
+                }
+
+                $blog->delete();
+
+                return redirect()->route('home')
+                    ->with('success', 'Blog post deleted successfully.');
+            }else{
+                return redirect()->route('home');
+            }
         }
-
-        $blog->delete();
-
-        return redirect()->route('home')
-            ->with('success', 'Blog post deleted successfully.');
     }
 
     public function edit($id)
     {
-        $blog = Blog::findOrFail($id);
+        if (auth()->id()) {
+            $userId = auth()->id();
+            $user = User::find($userId);
 
-        return view('blogs.edit', compact('blog'));
+            $blog = Blog::findOrFail($id);
+            if($userId === $blog->user_id || $user->role === 'admin'){
+                return view('blogs.edit', compact('blog'));
+            }else{
+                return redirect()->route('home')->with('error', 'Blog post Can not be updated');
+
+            }
+        }
     }
 
     public function update(Request $request, $id)
@@ -143,18 +160,33 @@ class BlogController extends Controller
     public function activate($id)
     {
         $blog = Blog::findOrFail($id);
-        $blog->is_active =  1;
-        $blog->save();
-        return redirect()->route('home')->with('success', 'Blog post status updated successfully');
+        if (auth()->id()) {
+            $userId = auth()->id();
+            $user = User::find($userId);
+            if($userId === $blog->user_id || $user->role === 'admin'){
+                $blog->is_active =  1;
+                $blog->save();
+                return redirect()->route('home')->with('success', 'Blog post status updated successfully');
+            }else{
+                return redirect()->route('home');
+            }
+        }
 
     }
 
     public function deactivate($id)
     {
         $blog = Blog::findOrFail($id);
-        $blog->is_active =  0;
-        $blog->save();
-        return redirect()->route('home')->with('success', 'Blog post status updated successfully');
-
+        if (auth()->id()) {
+            $userId = auth()->id();
+            $user = User::find($userId);
+            if($userId === $blog->user_id || $user->role === 'admin'){
+                $blog->is_active =  0;
+                $blog->save();
+                return redirect()->route('home')->with('success', 'Blog post status updated successfully');
+            }else{
+                return redirect()->route('home');
+            }
+        }
     }
 }

@@ -35,4 +35,5 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
+<script src="{{ asset('js/add-blog-validation.js') }}"></script>
 @endsection

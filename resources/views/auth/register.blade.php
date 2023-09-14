@@ -105,4 +105,5 @@
         </div>
     </div>
 </div>
+<script src="{{ asset('js/register-validation.js') }}"></script>
 @endsection

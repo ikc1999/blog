@@ -49,4 +49,6 @@
         <button type="submit" class="btn btn-primary">Update Blog</button>
     </form>
 </div>
+<script src="{{ asset('js/edit-blog-validation.js') }}"></script>
+
 @endsection

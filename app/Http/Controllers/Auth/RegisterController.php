@@ -53,7 +53,7 @@ class RegisterController extends Controller
             'firstname' => ['required', 'string', 'max:255'],
             'lastname' => ['required', 'string', 'max:255'],
             'dob' => ['required', 'date'],
-            'image' => ['required', 'image', 'max:2048'], // Assuming you want to validate image uploads with a maximum size of 2MB (2048 KB)
+            'image' => ['required', 'image', 'max:2048'],
             'role' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
